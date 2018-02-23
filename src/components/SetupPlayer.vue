@@ -95,8 +95,8 @@ export default {
   },
   props: {
     playerNum: {
-      type: Number,
-      default: 1
+      type: String,
+      default: 'one'
     }
   },
   mounted() {
@@ -105,7 +105,7 @@ export default {
       return collection[utils.getRandomNumber(max)].id
     }
 
-    this.playerName = 'Jugador ' + this.playerNum
+    this.playerName = `Jugador ${this.playerNum === 'one' ? 1 : 2}`
     this.musicStyle = getRandomItemId(this.availableStyles)
     this.instrument = getRandomItemId(this.availableInstruments)
   },

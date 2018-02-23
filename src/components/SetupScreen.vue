@@ -1,7 +1,7 @@
 <template>
   <section class="Setup">
-    <setup-player :playerNum="1" @ready="setPlayerReady"/>
-    <setup-player :playerNum="2" @ready="setPlayerReady"/>
+    <setup-player playerNum="one" @ready="setPlayerReady"/>
+    <setup-player playerNum="two" @ready="setPlayerReady"/>
   </section>
 </template>
 
