@@ -3,6 +3,7 @@
     <div v-if="hasStarted">
       <setup-screen v-if="currentScreen === 'setup'"/>
       <battle-screen v-if="currentScreen === 'battle'"/>
+      <end-screen v-if="currentScreen === 'end'"/>
     </div>
     <div v-else>
       <button @click="startGame">Empezar juego</button>
@@ -11,27 +12,22 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 import SetupScreen from '@/components/SetupScreen'
 import BattleScreen from '@/components/BattleScreen'
+import EndScreen from '@/components/EndScreen'
 
 export default {
-  data() {
-    return {
-      hasStarted: false
-    }
-  },
   components: {
     SetupScreen,
     BattleScreen,
+    EndScreen
   },
   computed: {
-    ...mapState(['currentScreen'])
+    ...mapState(['hasStarted', 'currentScreen'])
   },
   methods: {
-    startGame() {
-      this.hasStarted = true
-    }
+    ...mapMutations(['startGame'])
   }
 }
 </script>

@@ -1,4 +1,7 @@
 export default {
+  startGame(state) {
+    state.hasStarted = true
+  },
   setupPlayer(state, playerInfo) {
     const player = state.players[playerInfo.player]
 
@@ -13,5 +16,9 @@ export default {
   },
   hurtPlayer(state, {player, amount}) {
     state.players[player].life = state.players[player].life - amount
+
+    if (state.players[player].life <= 0) {
+      state.currentScreen = 'end'
+    }
   }
 }
