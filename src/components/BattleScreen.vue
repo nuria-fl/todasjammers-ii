@@ -1,7 +1,7 @@
 <template>
   <section class="Battleground">
-    <flash />
     <section class="Battleground__field">
+      <flash playerId="one" />
       <player-hud playerId="one" />
       <actions
         :turn="1"
@@ -11,6 +11,7 @@
       />
     </section>
     <section class="Battleground__field">
+      <flash playerId="two" />
       <player-hud playerId="two" />
       <actions
         :turn="2"
@@ -64,6 +65,7 @@ export default {
   justify-content: space-between;
   &__field {
     width: 50%;
+    position: relative;
   }
 }
 </style>

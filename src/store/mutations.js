@@ -23,7 +23,7 @@ export default {
 
     EventBus.$emit('showFlash', {
       playerId: player,
-      text: `- ${+amount}`,
+      text: `- ${Math.floor(amount)}`,
       style: 'danger'
     })
 
@@ -37,7 +37,7 @@ export default {
 
     EventBus.$emit('showFlash', {
       playerId: player,
-      text: `+ ${+amount}`,
+      text: `+ ${Math.ceil(amount)}`,
       style: 'success'
     })
   },
@@ -70,7 +70,7 @@ export default {
 
     EventBus.$emit('showFlash', {
       playerId: player,
-      text: `- ${+amount}`,
+      text: `- ${Math.floor(amount)}`,
       style: 'danger'
     })
   },

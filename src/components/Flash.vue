@@ -1,9 +1,13 @@
 <template>
-  <div
-    v-if="isVisible"
-    class="Flash"
-    :class="`Flash--player${playerId} Flash--${style}`">
-    {{ text }}
+  <div>
+    <div
+      v-for="alert in alerts"
+      v-show="alert.isVisible"
+      :key="alert.id"
+      class="Flash"
+      :class="`Flash--${alert.style}`">
+      {{ alert.text }}
+    </div>
   </div>
 </template>
 
@@ -13,33 +17,44 @@ import EventBus from '@/services/EventBus'
 export default {
   data () {
     return {
-      style: null,
-      playerId: null,
-      isVisible: false,
-      timeout: null
+      alerts: []
+    }
+  },
+  props: {
+    playerId: {
+      type: String,
+      required: true
     }
   },
   mounted () {
-    EventBus.$on('showFlash', this.showFlash)
+    EventBus.$on('showFlash', this.addFlashAlert)
   },
   methods: {
-    showFlash (info) {
-      this.hideFlash()
+    addFlashAlert (info) {
+      if (info.playerId === this.playerId) {
+        // clean old alerts
+        this.alerts = this.alerts.filter(alert => alert.isVisible)
 
-      this.playerId = info.playerId
-      this.style = info.style
-      this.text = info.text
-      this.isVisible = true
-      this.timeout = setTimeout(this.hideFlash, 3000)
+        const alert = {
+          id: new Date().getTime() + this.alerts.length,
+          style: info.style,
+          text: info.text,
+          isVisible: true
+        }
+
+        console.log(alert.id, alert.text)
+
+        this.alerts.push(alert)
+
+        setTimeout(() => {
+          this.hideFlashAlert(alert.id)
+        }, info.time || 2000)
+      }
     },
-    hideFlash () {
-      clearTimeout(this.timeout)
+    hideFlashAlert (alertId) {
+      const alertIdx = this.alerts.findIndex(alert => alert.id === alertId)
 
-      this.isVisible = false
-      this.playerId = null
-      this.style = null
-      this.text = null
-      this.timeout = null
+      this.alerts[alertIdx].isVisible = false
     }
   }
 }
@@ -48,18 +63,34 @@ export default {
 <style lang="scss">
   .Flash {
     position: absolute;
-    top: 0;
-    &--playerone {
-      left: 0
+    top: 50%;
+    left: 50%;
+
+    &:nth-child(odd) {
+      margin-left: -3em;
+      margin-top: -.5em;
     }
-    &--playertwo {
-      right: 0
+
+    &--success,
+    &--danger {
+      animation: bubbleUp 2s forwards;
     }
     &--success {
       color: green
     }
     &--danger {
       color: red
+    }
+
+    @keyframes bubbleUp {
+      0% {
+        opacity: 1;
+        transform: translate(0,0)
+      }
+      100% {
+        opacity: 0;
+        transform: translate(0,-2em)
+      }
     }
   }
 </style>

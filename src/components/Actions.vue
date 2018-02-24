@@ -130,7 +130,7 @@ export default {
         EventBus.$emit('showFlash', {
           playerId: this.playerId,
           text: `${this.player.name} pierde el turno`,
-          style: 'danger'
+          style: 'info'
         })
 
         this.turnHasStarted = false
@@ -146,7 +146,7 @@ export default {
         if (this.playerPerk) {
           this.perkTurnCount++
           if (this.perkTurnCount === this.playerPerk.duration) {
-            this.resetIllment(this.playerId)
+            this.resetPerk(this.playerId)
             this.perkTurnCount = 0
           }
         }

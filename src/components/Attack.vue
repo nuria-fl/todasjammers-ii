@@ -4,6 +4,7 @@
 
 <script>
 import utils from '@/services/utils'
+import EventBus from '@/services/EventBus'
 import playerMixin from '@/mixins/playerMixin'
 
 export default {
@@ -26,10 +27,40 @@ export default {
     },
     opponentIsWeak () {
       return this.opponent.weakAgainst === this.player.style
+    },
+    isPlayerConfused () {
+      return this.player.illment && this.player.illment.id === 'confusion'
     }
   },
   methods: {
     attack () {
+      if (this.isPlayerConfused) {
+        const shouldMiss = utils.getRandomNumber(10) < 6
+        const shouldGetDamaged = utils.getRandomNumber(10) < 3
+
+        if (shouldMiss) {
+          EventBus.$emit('showFlash', {
+            playerId: this.playerId,
+            text: `${this.player.name} no está cantando muy bien...`,
+            style: 'info'
+          })
+          this.$emit('done')
+          return
+        } else if (shouldGetDamaged) {
+          EventBus.$emit('showFlash', {
+            playerId: this.playerId,
+            text: `¡${this.player.name} ha hecho un gallo!`,
+            style: 'info'
+          })
+          this.hurtPlayer({
+            player: this.playerId,
+            amount: 5
+          })
+          this.$emit('done')
+          return
+        }
+      }
+
       const calculateResistance = () => {
         let modifier = 0.3
 
