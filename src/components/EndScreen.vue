@@ -12,12 +12,12 @@ import { mapState } from 'vuex'
 export default {
   computed: {
     ...mapState(['players']),
-    winner() {
-      return this.players.one.life > 0 ? this.players.one.name : this.players.two.name 
+    winner () {
+      return this.players.one.life > 0 ? this.players.one.name : this.players.two.name
     }
   },
   methods: {
-    restart() {
+    restart () {
       window.location.reload()
     }
   }

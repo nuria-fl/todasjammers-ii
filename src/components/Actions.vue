@@ -107,8 +107,8 @@ export default {
 
       this.$emit('done')
     },
-    handleRandomRecovery() {
-      const chance = utils.getRandomNumber(10) < 3
+    handleRandomRecovery () {
+      const chance = utils.getRandomNumber(10) < 2
 
       if (chance === true) {
         console.log('RANDOM RECOVERY')

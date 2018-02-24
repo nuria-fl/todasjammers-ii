@@ -4,7 +4,7 @@
       <label class="PlayerSetup__label">
         Nombre del artista:
       </label>
-      <input 
+      <input
         type="text"
         v-model="playerName"
         :disabled="finished"
@@ -28,8 +28,8 @@
         Instrumento:
       </label>
       <select v-model="instrument" :disabled="finished">
-        <option 
-          v-for="instrument in availableInstruments" 
+        <option
+          v-for="instrument in availableInstruments"
           :value="instrument.id"
           :key="instrument.id">
           {{ instrument.name }}

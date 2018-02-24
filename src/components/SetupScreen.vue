@@ -10,7 +10,7 @@ import { mapMutations } from 'vuex'
 import SetupPlayer from '@/components/SetupPlayer'
 
 export default {
-  data() {
+  data () {
     return {
       playerReadyCount: 0
     }
@@ -20,7 +20,7 @@ export default {
   },
   methods: {
     ...mapMutations(['setCurrentScreen']),
-    setPlayerReady() {
+    setPlayerReady () {
       this.playerReadyCount++
       if (this.playerReadyCount === 2) {
         this.setCurrentScreen('battle')
