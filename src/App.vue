@@ -1,5 +1,5 @@
 <template>
-  <main>
+  <main class="Main">
     <div v-if="hasStarted">
       <setup-screen v-if="currentScreen === 'setup'"/>
       <battle-screen v-if="currentScreen === 'battle'"/>
@@ -33,7 +33,22 @@ export default {
 </script>
 
 <style lang="scss">
+  *,
+  *:before,
+  *:after {
+    box-sizing: border-box;
+  }
+
   body {
     font-family: monospace;
+  }
+
+  .Main {
+    position: relative;
+    background: #dedede;
+    width: 900px;
+    height: 500px;
+    margin: 0 auto;
+    padding: 2rem;
   }
 </style>

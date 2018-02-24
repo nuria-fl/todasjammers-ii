@@ -58,4 +58,12 @@ export default {
 </script>
 
 <style lang="scss">
+.Battleground {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  &__field {
+    width: 50%;
+  }
+}
 </style>
