@@ -79,14 +79,15 @@ export default {
       this.finishTurn()
     },
     startTurn () {
-      console.log('start turn', this.turn)
-
       if (this.playerPerk && this.playerPerk.id === 'cure') {
-        console.log('heal a bit')
         this.healPlayer({
           player: this.playerId,
           amount: 5
         })
+      }
+
+      if (!this.playerIllment || this.playerIllment.id !== 'lose-turns') {
+        this.turnHasStarted = true
       }
 
       if (this.playerIllment) {
@@ -104,10 +105,6 @@ export default {
             // this will be handled by the action itself
             break
         }
-      }
-
-      if (!this.playerIllment || this.playerIllment.id !== 'lose-turns') {
-        this.turnHasStarted = true
       }
     },
     finishAttack () {
@@ -159,7 +156,12 @@ export default {
       const chance = utils.getRandomNumber(10) < 2
 
       if (chance === true) {
-        console.log('RANDOM RECOVERY')
+        EventBus.$emit('showFlash', {
+          playerId: this.playerId,
+          text: `El triángulo es un instrumento mágico <3`,
+          style: 'info'
+        })
+
         this.healPlayer({
           player: this.playerId,
           amount: 20
