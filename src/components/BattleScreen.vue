@@ -17,6 +17,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import utils from '@/services/utils'
 import PlayerHud from '@/components/PlayerHud'
 import Actions from '@/components/Actions'
 
@@ -29,6 +30,9 @@ export default {
   components: {
     PlayerHud,
     Actions
+  },
+  mounted() {
+    this.turn = utils.getRandomNumber(2)
   },
   methods: {
     changeTurn() {

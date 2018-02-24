@@ -6,6 +6,11 @@ export default {
     const player = state.players[playerInfo.player]
 
     player.name = playerInfo.name
+    player.style = playerInfo.style
+    player.instrument = playerInfo.instrument
+    player.strongAgainst = playerInfo.strongAgainst
+    player.weakAgainst = playerInfo.weakAgainst
+    player.bonus = playerInfo.bonus
     player.stats = {
       attack: playerInfo.attack,
       defense: playerInfo.defense
@@ -20,5 +25,9 @@ export default {
     if (state.players[player].life <= 0) {
       state.currentScreen = 'end'
     }
+  },
+  healPlayer (state, {player, amount}) {
+    const addedLife = state.players[player].life + amount
+    state.players[player].life = addedLife > 100 ? 100 : addedLife
   }
 }

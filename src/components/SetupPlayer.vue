@@ -50,41 +50,56 @@ export default {
       availableInstruments: [
         {
           id: 'mic',
-          name: 'Micrófono'
+          name: 'Micrófono',
+          bonus: 'attack'
         },
         {
           id: 'guitar',
-          name: 'Guitarra'
+          name: 'Guitarra',
+          bonus: 'defense'
         },
         {
           id: 'triangle',
-          name: 'Triángulo'
+          name: 'Triángulo',
+          bonus: 'random-recovery'
         },
       ],
       availableStyles: [
         {
           id: 'reggeton',
-          name: 'Reggeton'
+          name: 'Reggeton',
+          strongAgainst: 'classic',
+          weakAgainst: 'heavy'
         },
         {
           id: 'heavy',
-          name: 'Heavy Metal'
+          name: 'Heavy Metal',
+          strongAgainst: 'country',
+          weakAgainst: 'hiphop'
         },
         {
           id: 'country',
-          name: 'Country'
+          name: 'Country',
+          strongAgainst: 'hiphop',
+          weakAgainst: 'rock'
         },
         {
           id: 'classic',
-          name: 'Música clásica'
+          name: 'Música clásica',
+          strongAgainst: 'heavy',
+          weakAgainst: 'country'
         },
         {
           id: 'hiphop',
-          name: 'Hip Hop'
+          name: 'Hip Hop',
+          strongAgainst: 'rock',
+          weakAgainst: 'reggeton'
         },
         {
           id: 'rock',
-          name: 'Rock'
+          name: 'Rock',
+          strongAgainst: 'reggeton',
+          weakAgainst: 'classic'
         }
       ],
       playerName: null,
@@ -109,12 +124,34 @@ export default {
     this.musicStyle = getRandomItemId(this.availableStyles)
     this.instrument = getRandomItemId(this.availableInstruments)
   },
+  computed: {
+    chosenInstrument() {
+      return this.availableInstruments.find(instrument => instrument.id === this.instrument)
+    },
+    bonus() {
+      return this.chosenInstrument.bonus
+    },
+    chosenStyle() {
+      return this.availableStyles.find(style => style.id === this.musicStyle)
+    },
+    strength() {
+      return this.chosenStyle.strongAgainst
+    },
+    weakness() {
+      return this.chosenStyle.weakAgainst
+    }
+  },
   methods: {
     ...mapMutations(['setupPlayer']),
     createPlayer() {
       this.setupPlayer({
         player: this.playerNum,
         name: this.playerName,
+        style: this.musicStyle,
+        strongAgainst: this.strength,
+        weakAgainst: this.weakness,
+        instrument: this.instrument,
+        bonus: this.bonus,
         attack: 5,
         defense: 5
       })
