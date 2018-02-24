@@ -1,3 +1,5 @@
+import EventBus from '@/services/EventBus'
+
 export default {
   startGame (state) {
     state.hasStarted = true
@@ -11,16 +13,19 @@ export default {
     player.strongAgainst = playerInfo.strongAgainst
     player.weakAgainst = playerInfo.weakAgainst
     player.bonus = playerInfo.bonus
-    player.stats = {
-      attack: playerInfo.attack,
-      defense: playerInfo.defense
-    }
+    player.stats = playerInfo.stats
   },
   setCurrentScreen (state, screen) {
     state.currentScreen = screen
   },
-  hurtPlayer (state, {player, amount}) {
+  substractLife (state, {player, amount}) {
     state.players[player].life = state.players[player].life - amount
+
+    EventBus.$emit('showFlash', {
+      playerId: player,
+      text: `- ${+amount}`,
+      style: 'danger'
+    })
 
     if (state.players[player].life <= 0) {
       state.currentScreen = 'end'
@@ -29,5 +34,52 @@ export default {
   healPlayer (state, {player, amount}) {
     const addedLife = state.players[player].life + amount
     state.players[player].life = addedLife > 100 ? 100 : addedLife
+
+    EventBus.$emit('showFlash', {
+      playerId: player,
+      text: `+ ${+amount}`,
+      style: 'success'
+    })
+  },
+  addIllmentToPlayer (state, {player, illment, duration}) {
+    state.players[player].illment = {
+      id: illment,
+      duration
+    }
+  },
+  addPerkToPlayer (state, {player, perk, duration}) {
+    state.players[player].perk = {
+      id: perk,
+      duration
+    }
+  },
+  resetIllment (state, player) {
+    state.players[player].illment = null
+  },
+  resetPerk (state, player) {
+    state.players[player].perk = null
+  },
+  addShield (state, player) {
+    state.players[player].shield = 20
+  },
+  substractShield (state, {player, amount}) {
+    const shieldAmount = state.players[player].shield
+    const shieldLeft = shieldAmount - amount
+
+    state.players[player].shield = shieldLeft < 0 ? 0 : shieldLeft
+
+    EventBus.$emit('showFlash', {
+      playerId: player,
+      text: `- ${+amount}`,
+      style: 'danger'
+    })
+  },
+  substractMana (state, {player, amount}) {
+    const manaLeft = state.players[player].mana - amount
+    state.players[player].mana = manaLeft < 0 ? 0 : manaLeft
+  },
+  increaseMana (state, {player, amount}) {
+    const addedMana = state.players[player].mana + amount
+    state.players[player].mana = addedMana > 100 ? 100 : addedMana
   }
 }

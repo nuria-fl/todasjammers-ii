@@ -4,6 +4,11 @@ const state = {
   players: {
     one: {
       life: 100,
+      mana: 100,
+      illment: null,
+      perk: null,
+      bonus: null,
+      shield: 0,
       name: 'Jugador 1',
       style: null,
       instrument: null,
@@ -16,6 +21,11 @@ const state = {
     },
     two: {
       life: 100,
+      mana: 100,
+      illment: null,
+      perk: null,
+      bonus: null,
+      shield: 0,
       name: 'Jugador 2',
       style: null,
       instrument: null,

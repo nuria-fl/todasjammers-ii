@@ -12,11 +12,24 @@
     </div>
     <div>
       <label class="PlayerSetup__label">
+        País:
+      </label>
+      <select v-model="country" :disabled="finished">
+        <option
+          v-for="country in availableCountries"
+          :value="country.id"
+          :key="country.id">
+          {{ country.name }}
+        </option>
+      </select>
+    </div>
+    <div>
+      <label class="PlayerSetup__label">
         Estilo musical:
       </label>
       <select v-model="musicStyle" :disabled="finished">
-        <option 
-          v-for="style in availableStyles" 
+        <option
+          v-for="style in availableStyles"
           :value="style.id"
           :key="style.id">
           {{ style.name }}
@@ -45,8 +58,58 @@ import { mapMutations } from 'vuex'
 import utils from '@/services/utils'
 
 export default {
-  data() {
+  data () {
     return {
+      availableCountries: [
+        {
+          id: 'es',
+          name: 'España',
+          stats: {
+            attack: 5,
+            defense: 5
+          }
+        },
+        {
+          id: 'fr',
+          name: 'Francia',
+          stats: {
+            attack: 4,
+            defense: 6
+          }
+        },
+        {
+          id: 'it',
+          name: 'Italia',
+          stats: {
+            attack: 6,
+            defense: 4
+          }
+        },
+        {
+          id: 'uk',
+          name: 'Reino Unido',
+          stats: {
+            attack: 6.5,
+            defense: 3.5
+          }
+        },
+        {
+          id: 'ge',
+          name: 'Alemania',
+          stats: {
+            attack: 4.5,
+            defense: 5.5
+          }
+        },
+        {
+          id: 'pt',
+          name: 'Portugal',
+          stats: {
+            attack: 3.5,
+            defense: 6.5
+          }
+        }
+      ],
       availableInstruments: [
         {
           id: 'mic',
@@ -62,7 +125,7 @@ export default {
           id: 'triangle',
           name: 'Triángulo',
           bonus: 'random-recovery'
-        },
+        }
       ],
       availableStyles: [
         {
@@ -105,55 +168,60 @@ export default {
       playerName: null,
       musicStyle: null,
       instrument: null,
+      country: null,
       finished: false
     }
   },
   props: {
-    playerNum: {
+    playerId: {
       type: String,
       default: 'one'
     }
   },
-  mounted() {
+  mounted () {
     const getRandomItemId = (collection) => {
       const max = collection.length - 1
       return collection[utils.getRandomNumber(max)].id
     }
 
-    this.playerName = `Jugador ${this.playerNum === 'one' ? 1 : 2}`
+    this.playerName = `Jugador ${this.playerId === 'one' ? 1 : 2}`
     this.musicStyle = getRandomItemId(this.availableStyles)
     this.instrument = getRandomItemId(this.availableInstruments)
+    this.country = getRandomItemId(this.availableCountries)
   },
   computed: {
-    chosenInstrument() {
+    chosenInstrument () {
       return this.availableInstruments.find(instrument => instrument.id === this.instrument)
     },
-    bonus() {
+    bonus () {
       return this.chosenInstrument.bonus
     },
-    chosenStyle() {
+    chosenStyle () {
       return this.availableStyles.find(style => style.id === this.musicStyle)
     },
-    strength() {
+    chosenCountry () {
+      return this.availableCountries.find(country => country.id === this.country)
+    },
+    strength () {
       return this.chosenStyle.strongAgainst
     },
-    weakness() {
+    weakness () {
       return this.chosenStyle.weakAgainst
     }
   },
   methods: {
     ...mapMutations(['setupPlayer']),
-    createPlayer() {
+    createPlayer () {
       this.setupPlayer({
-        player: this.playerNum,
+        player: this.playerId,
         name: this.playerName,
         style: this.musicStyle,
         strongAgainst: this.strength,
         weakAgainst: this.weakness,
         instrument: this.instrument,
         bonus: this.bonus,
-        attack: 5,
-        defense: 5
+        country: this.country,
+        stats: this.chosenCountry.stats
       })
       this.finished = true
       this.$emit('ready')

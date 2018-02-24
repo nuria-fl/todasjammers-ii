@@ -1,111 +1,159 @@
 <template>
-  <section>
-    <button @click="attack">CANTAR</button>
-    <button @click="powerUp">BAILAR</button>
+  <section v-show="isCurrentTurn && turnHasStarted">
+    <attack
+      :playerId="playerId"
+      :hasPowerUp="hasPowerUp"
+      @done="finishAttack" />
+    <button
+      @click="powerUp"
+      :disabled="disablePowerUp">
+      BAILAR
+    </button>
+    <special-action
+      :playerId="playerId"
+      @done="finishTurn" />
   </section>
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex'
+import { mapMutations } from 'vuex'
 import utils from '@/services/utils'
+import EventBus from '@/services/EventBus'
+import playerMixin from '@/mixins/playerMixin'
+import Attack from '@/components/Attack'
+import SpecialAction from '@/components/SpecialAction'
 
 export default {
-  props: {
-    playerNum: {
-      type: String,
-      default: 'one',
-      hasPowerUp: false
+  data () {
+    return {
+      turnHasStarted: false,
+      hasPowerUp: false,
+      powerUpCost: 20,
+      illmentTurnCount: 0,
+      perkTurnCount: 0,
+      isCurrentTurn: false
     }
   },
+  mixins: [ playerMixin ],
+  props: {
+    turn: {
+      type: Number,
+      required: true
+    },
+    currentTurn: {
+      type: Number,
+      required: true
+    }
+  },
+  watch: {
+    currentTurn () {
+      if (this.turn === this.currentTurn) {
+        this.isCurrentTurn = true
+        this.startTurn()
+      } else {
+        this.isCurrentTurn = false
+      }
+    }
+  },
+  components: {
+    Attack,
+    SpecialAction
+  },
   computed: {
-    ...mapState(['players']),
-    player() {
-      return this.players[this.playerNum]
+    disablePowerUp () {
+      return this.hasPowerUp || this.player.mana < this.powerUpCost
     },
-    opponentId() {
-      return this.playerNum === 'one' ? 'two' : 'one'
+    playerIllment () {
+      return this.player.illment
     },
-    opponent() {
-      return this.players[this.opponentId]
-    },
-    isStrong() {
-      return this.opponent.style === this.player.strongAgainst
-    },
-    isWeak() {
-      return this.opponent.style === this.player.weakAgainst
-    },
-    opponentIsStrong() {
-      return this.opponent.strongAgainst === this.player.style
-    },
-    opponentIsWeak() {
-      return this.opponent.weakAgainst === this.player.style
-    },
+    playerPerk () {
+      return this.player.perk
+    }
   },
   methods: {
-    ...mapMutations(['hurtPlayer', 'healPlayer']),
-    attack() {
-      const calculateResistance = () => {
-        let modifier = 0.5
+    ...mapMutations(['resetIllment', 'resetPerk']),
+    powerUp () {
+      this.hasPowerUp = true
+      this.substractPlayerMana(this.powerUpCost)
 
-        if (this.opponentIsStrong) {
-          console.log('STRONG')
-          modifier = 0.8
-        } else if (this.opponentIsWeak) {
-          console.log('WEAK')
-          modifier = 0.2
-        }
+      this.finishTurn()
+    },
+    startTurn () {
+      console.log('start turn', this.turn)
 
-        return this.opponent.stats.defense * modifier + utils.getRandomNumber(3, 0)
+      if (this.playerPerk && this.playerPerk.id === 'cure') {
+        console.log('heal a bit')
+        this.healPlayer({
+          player: this.playerId,
+          amount: 5
+        })
       }
 
-      const calculateDamage = () => {
-        let modifier = 1
-
-        if (this.isStrong) {
-          console.log('STRONG')
-          modifier = 1.3
-        } else if (this.isWeak) {
-          console.log('WEAK')
-          modifier = 0.7
+      if (this.playerIllment) {
+        switch (this.playerIllment.id) {
+          case 'burn':
+            this.hurtPlayer({
+              player: this.playerId,
+              amount: 3
+            })
+            break
+          case 'lose-turns':
+            this.finishTurn(true)
+            break
+          case 'confusion':
+            // this will be handled by the action itself
+            break
         }
-
-        return this.player.stats.attack * modifier + utils.getRandomNumber(5)
       }
 
-      let damage = calculateDamage()
-      let resistance = calculateResistance()
-
+      if (!this.playerIllment || this.playerIllment.id !== 'lose-turns') {
+        this.turnHasStarted = true
+      }
+    },
+    finishAttack () {
       if (this.hasPowerUp) {
-        damage = damage + utils.getRandomNumber(5, 2)
         this.hasPowerUp = false
       }
 
-      if (this.player.bonus === 'random-recovery') {
-        this.handleRandomRecovery()
-      } else if (this.player.bonus === 'attack') {
-        damage++
-      } else if (this.player.bonus === 'defense') {
-        resistance++
-      }
-
-      console.log('resistance ', resistance)
-      console.log('damage ', damage)
-
-      this.hurtPlayer({
-        player: this.opponentId, 
-        amount: damage - resistance
-      })
-
-      this.$emit('done')
+      this.finishTurn()
     },
-    powerUp() {
-      this.hasPowerUp = true
-
-      if (this.player.bonus === 'random-recovery') {
-        this.handleRandomRecovery()
+    finishTurn (skip = false) {
+      if (this.playerIllment) {
+        this.illmentTurnCount++
+        if (this.illmentTurnCount === this.playerIllment.duration) {
+          this.resetIllment(this.playerId)
+          this.illmentTurnCount = 0
+        }
       }
 
-      this.$emit('done')
+      if (skip) {
+        EventBus.$emit('showFlash', {
+          playerId: this.playerId,
+          text: `${this.player.name} pierde el turno`,
+          style: 'danger'
+        })
+
+        this.turnHasStarted = false
+
+        setTimeout(() => {
+          this.$emit('done')
+        }, 2000)
+      } else {
+        if (!skip && this.player.bonus === 'random-recovery') {
+          this.handleRandomRecovery()
+        }
+
+        if (this.playerPerk) {
+          this.perkTurnCount++
+          if (this.perkTurnCount === this.playerPerk.duration) {
+            this.resetIllment(this.playerId)
+            this.perkTurnCount = 0
+          }
+        }
+
+        this.turnHasStarted = false
+        this.$emit('done')
+      }
     },
     handleRandomRecovery () {
       const chance = utils.getRandomNumber(10) < 2
@@ -113,7 +161,7 @@ export default {
       if (chance === true) {
         console.log('RANDOM RECOVERY')
         this.healPlayer({
-          player: this.playerNum,
+          player: this.playerId,
           amount: 20
         })
       }

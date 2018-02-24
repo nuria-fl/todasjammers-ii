@@ -2,24 +2,16 @@
   <section>
     <div>{{ player.name }}</div>
     <div>Life: {{ player.life }}</div>
+    <div v-if="player.shield">Shield: {{ player.shield }}</div>
+    <div>Mana: {{ player.mana }}</div>
   </section>
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import playerMixin from '@/mixins/playerMixin'
+
 export default {
-  props: {
-    playerNum: {
-      type: String,
-      default: 'one'
-    }
-  },
-  computed: {
-    ...mapState(['players']),
-    player() {
-      return this.players[this.playerNum]
-    }
-  }
+  mixins: [ playerMixin ]
 }
 </script>
 
