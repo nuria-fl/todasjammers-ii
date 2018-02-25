@@ -1,8 +1,12 @@
 <template>
-  <section>
-    <h1>GAME OVER</h1>
-    <h2>{{ winner }} ha ganado</h2>
-    <button @click="restart">Volver a jugar</button>
+  <section class="Splash">
+    <h1 class="Splash__title">GAME <strong>OVER</strong></h1>
+    <h2 class="Splash__lead">{{ winner }} ha ganado</h2>
+    <button
+      @click="restart"
+      class="Btn">
+      Volver a jugar
+    </button>
   </section>
 </template>
 
