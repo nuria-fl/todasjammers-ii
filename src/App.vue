@@ -224,6 +224,7 @@ table {
       font-size: 5.5rem;
       color: #cd5334;
       text-shadow: 5px 5px 0  #2e282a;
+      animation: titleBounce 3s infinite;
       strong {
         color: #56cfcd;
       }
@@ -244,4 +245,16 @@ table {
       padding: .5em;
     }
   }
+
+  @keyframes titleBounce {
+      0% {
+        transform: translate(0, -.5rem);
+      }
+      50% {
+        transform: translate(0, .3rem);
+      }
+      100% {
+        transform: translate(0, -.5rem);
+      }
+    }
 </style>
