@@ -3,6 +3,7 @@
     <section class="Battleground__field">
       <flash playerId="one" />
       <player-hud playerId="one" />
+      <character playerId="one"/>
       <actions
         :turn="1"
         :currentTurn="turn"
@@ -13,6 +14,7 @@
     <section class="Battleground__field">
       <flash playerId="two" />
       <player-hud playerId="two" />
+      <character playerId="two"/>
       <actions
         :turn="2"
         :currentTurn="turn"
@@ -28,6 +30,7 @@ import utils from '@/services/utils'
 import Flash from '@/components/Flash'
 import PlayerHud from '@/components/PlayerHud'
 import Actions from '@/components/Actions'
+import Character from '@/components/Character'
 
 export default {
   data () {
@@ -39,7 +42,8 @@ export default {
   components: {
     Flash,
     PlayerHud,
-    Actions
+    Actions,
+    Character
   },
   mounted () {
     this.turn = utils.getRandomNumber(2)
@@ -60,11 +64,13 @@ export default {
 
 <style lang="scss">
 .Battleground {
+  height: 100%;
   width: 100%;
   display: flex;
   justify-content: space-between;
   &__field {
     width: 50%;
+    height: 100%;
     position: relative;
   }
 }

@@ -65,6 +65,8 @@ export default {
     position: absolute;
     top: 50%;
     left: 50%;
+    z-index: 9;
+    font-size: 2rem;
 
     &:nth-child(odd) {
       margin-left: -3em;

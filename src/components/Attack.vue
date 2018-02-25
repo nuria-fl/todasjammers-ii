@@ -1,5 +1,5 @@
 <template>
-  <button @click="attack">CANTAR</button>
+  <button @click="attack">Cantar</button>
 </template>
 
 <script>

@@ -26,7 +26,7 @@ export default {
   computed: {
     specialActionName () {
       const actionNames = {
-        reggeton: 'Twerking',
+        reggaeton: 'Twerking',
         heavy: 'Headbanging',
         country: 'Lanzar estepicursor',
         classic: 'Dirigir orquesta',
@@ -45,7 +45,7 @@ export default {
     ...mapMutations(['addShield']),
     specialAction () {
       switch (this.player.style) {
-        case 'reggeton':
+        case 'reggaeton':
           // absorb enemy life
           this.hurtPlayer({
             player: this.opponentId,

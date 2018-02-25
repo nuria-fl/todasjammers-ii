@@ -129,8 +129,8 @@ export default {
       ],
       availableStyles: [
         {
-          id: 'reggeton',
-          name: 'Reggeton',
+          id: 'reggaeton',
+          name: 'Reggaeton',
           strongAgainst: 'classic',
           weakAgainst: 'heavy'
         },
@@ -156,12 +156,12 @@ export default {
           id: 'hiphop',
           name: 'Hip Hop',
           strongAgainst: 'rock',
-          weakAgainst: 'reggeton'
+          weakAgainst: 'reggaeton'
         },
         {
           id: 'rock',
           name: 'Rock',
-          strongAgainst: 'reggeton',
+          strongAgainst: 'reggaeton',
           weakAgainst: 'classic'
         }
       ],

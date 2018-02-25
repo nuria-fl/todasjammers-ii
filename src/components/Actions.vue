@@ -1,5 +1,7 @@
 <template>
-  <section v-show="isCurrentTurn && turnHasStarted">
+  <section
+    v-show="isCurrentTurn && turnHasStarted"
+    :class="`Actions Actions--${playerId}`">
     <attack
       :playerId="playerId"
       :hasPowerUp="hasPowerUp"
@@ -7,7 +9,7 @@
     <button
       @click="powerUp"
       :disabled="disablePowerUp">
-      BAILAR
+      Bailar
     </button>
     <special-action
       :playerId="playerId"
@@ -173,4 +175,47 @@ export default {
 </script>
 
 <style lang="scss">
+.Actions {
+  width: 60%;
+  position: absolute;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  background: rgba(0,0,0,.5);
+  padding: 8px;
+  &--one {
+    left: 0;
+  }
+  &--two {
+    right: 0;
+  }
+  button {
+    margin: 0 0 8px 0;
+    padding: .3em 1em;
+    background: #17bebb;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    font-size: 1.2rem;
+    font-family: monospace;
+    text-transform: capitalize;
+    transition: opacity .3s;
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    &:hover {
+      opacity: .8;
+    }
+
+    &:disabled {
+      cursor: default;
+      background: #094644;
+      color: #118b89;
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+}
 </style>
