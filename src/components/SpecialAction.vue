@@ -8,6 +8,7 @@
 
 <script>
 import { mapMutations } from 'vuex'
+import sound from '@/services/sound'
 import playerMixin from '@/mixins/playerMixin'
 
 export default {
@@ -44,6 +45,8 @@ export default {
   methods: {
     ...mapMutations(['addShield']),
     specialAction () {
+      sound.playSpecial()
+
       switch (this.player.style) {
         case 'reggaeton':
           // absorb enemy life

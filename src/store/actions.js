@@ -1,5 +1,8 @@
+import sound from '@/services/sound'
+
 export default {
   hurtPlayer ({state, commit}, {player, amount}) {
+    sound.playHit()
     if (state.players[player].shield) {
       let substractFromShieldAmount = amount
       let substractFromLifeAmount = 0

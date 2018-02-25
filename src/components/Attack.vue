@@ -109,7 +109,7 @@ export default {
 
       this.hurtPlayer({
         player: this.opponentId,
-        amount: amount < 0.5 ? 0.5 : amount
+        amount: amount < 1 ? 1 : amount
       })
 
       this.increasePlayerMana()

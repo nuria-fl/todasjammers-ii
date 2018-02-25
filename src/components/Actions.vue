@@ -19,6 +19,7 @@
 
 <script>
 import { mapMutations } from 'vuex'
+import sound from '@/services/sound'
 import utils from '@/services/utils'
 import EventBus from '@/services/EventBus'
 import playerMixin from '@/mixins/playerMixin'
@@ -75,6 +76,8 @@ export default {
   methods: {
     ...mapMutations(['resetIllment', 'resetPerk']),
     powerUp () {
+      sound.playSpecial()
+
       this.hasPowerUp = true
       this.substractPlayerMana(this.powerUpCost)
 
@@ -96,6 +99,7 @@ export default {
       }
 
       if (!this.playerIllment || this.playerIllment.id !== 'lose-turns') {
+        sound.playTurn()
         this.turnHasStarted = true
       }
 
@@ -165,7 +169,7 @@ export default {
       }
     },
     handleRandomRecovery () {
-      const chance = utils.getRandomNumber(10) < 2
+      const chance = utils.getRandomNumber(10) === 1
 
       if (chance === true) {
         EventBus.$emit('showFlash', {
@@ -174,9 +178,11 @@ export default {
           style: 'info'
         })
 
+        sound.playSpecial()
+
         this.healPlayer({
           player: this.playerId,
-          amount: 20
+          amount: 10
         })
       }
     }

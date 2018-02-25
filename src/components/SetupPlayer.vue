@@ -93,6 +93,7 @@
 <script>
 import { mapMutations } from 'vuex'
 import utils from '@/services/utils'
+import sound from '@/services/sound'
 import Character from '@/components/Character'
 
 export default {
@@ -285,6 +286,8 @@ export default {
   methods: {
     ...mapMutations(['setupPlayer']),
     createPlayer () {
+      sound.playMenu()
+
       this.setupPlayer({
         player: this.playerId,
         name: this.playerName,
