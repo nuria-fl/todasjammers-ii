@@ -9,6 +9,7 @@
 <script>
 import { mapMutations } from 'vuex'
 import sound from '@/services/sound'
+import EventBus from '@/services/EventBus'
 import playerMixin from '@/mixins/playerMixin'
 
 export default {
@@ -58,6 +59,11 @@ export default {
             player: this.playerId,
             amount: 10
           })
+          EventBus.$emit('showFlash', {
+            playerId: this.playerId,
+            text: `¡${this.player.name} le está robando la vida a ${this.opponent.name}!`,
+            style: 'info'
+          })
 
           break
         case 'heavy':
@@ -66,6 +72,12 @@ export default {
             player: this.opponentId,
             illment: 'burn',
             duration: 4
+          })
+
+          EventBus.$emit('showFlash', {
+            playerId: this.opponentId,
+            text: `¡${this.opponent.name} arde en llamas del infierno!`,
+            style: 'info'
           })
 
           break
@@ -81,6 +93,12 @@ export default {
         case 'classic':
           // shield (20 damage)
           this.addShield(this.playerId)
+
+          EventBus.$emit('showFlash', {
+            playerId: this.playerId,
+            text: `¡La orquesta de ${this.player.name} le proporciona un escudo!`,
+            style: 'info'
+          })
           break
         case 'hiphop':
           // heal a bit every turn for 4 turns
@@ -88,6 +106,11 @@ export default {
             player: this.playerId,
             perk: 'cure',
             duration: 4
+          })
+          EventBus.$emit('showFlash', {
+            playerId: this.playerId,
+            text: `${this.player.name} recupera un poco de vida`,
+            style: 'info'
           })
 
           break
@@ -97,6 +120,12 @@ export default {
             player: this.opponentId,
             illment: 'confusion',
             duration: 4
+          })
+
+          EventBus.$emit('showFlash', {
+            playerId: this.opponentId,
+            text: `${this.opponent.name} está confuso`,
+            style: 'info'
           })
 
           break
