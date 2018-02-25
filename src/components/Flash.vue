@@ -46,9 +46,11 @@ export default {
 
         this.alerts.push(alert)
 
+        const defaultTime = this.style === 'info' ? 4000 : 3000
+
         setTimeout(() => {
           this.hideFlashAlert(alert.id)
-        }, info.time || 2000)
+        }, info.time || defaultTime)
       }
     },
     hideFlashAlert (alertId) {
@@ -75,13 +77,26 @@ export default {
 
     &--success,
     &--danger {
-      animation: bubbleUp 2s forwards;
+      animation: bubbleUp 3s forwards;
     }
     &--success {
       color: green
     }
     &--danger {
       color: red
+    }
+
+    &--info {
+      background: rgba(0,0,0,.7);
+      margin: 0 !important;
+      top: 0;
+      width: 100%;
+      padding: 1em;
+      color: #fff;
+      font-size: 1.3rem;
+      text-align: center;
+      transform: translate(-50%, -5em);
+      animation: comeDown .5s forwards;
     }
 
     @keyframes bubbleUp {
@@ -92,6 +107,19 @@ export default {
       100% {
         opacity: 0;
         transform: translate(0,-2em)
+      }
+    }
+
+    @keyframes comeDown {
+      0% {
+        opacity: 0;
+        transform: translate(-50%,-5em)
+      }
+      50% {
+        opacity: 1;
+      }
+      100% {
+        transform: translate(-50%,0)
       }
     }
   }

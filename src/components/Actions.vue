@@ -78,7 +78,14 @@ export default {
       this.hasPowerUp = true
       this.substractPlayerMana(this.powerUpCost)
 
-      this.finishTurn()
+      EventBus.$emit('showFlash', {
+        playerId: this.playerId,
+        text: `Cargando energía...`,
+        style: 'info',
+        time: 2000
+      })
+
+      this.finishTurn(false, 2000)
     },
     startTurn () {
       if (this.playerPerk && this.playerPerk.id === 'cure') {
@@ -116,7 +123,7 @@ export default {
 
       this.finishTurn()
     },
-    finishTurn (skip = false) {
+    finishTurn (skip = false, delay = 500) {
       if (this.playerIllment) {
         this.illmentTurnCount++
         if (this.illmentTurnCount === this.playerIllment.duration) {
@@ -151,7 +158,10 @@ export default {
         }
 
         this.turnHasStarted = false
-        this.$emit('done')
+
+        setTimeout(() => {
+          this.$emit('done')
+        }, delay)
       }
     },
     handleRandomRecovery () {
@@ -160,7 +170,7 @@ export default {
       if (chance === true) {
         EventBus.$emit('showFlash', {
           playerId: this.playerId,
-          text: `El triángulo es un instrumento mágico <3`,
+          text: `El triángulo es un instrumento mágico. ¡Recuperas vida! <3`,
           style: 'info'
         })
 
