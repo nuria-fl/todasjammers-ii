@@ -1,5 +1,5 @@
 let isMuted = false
-const bgMusic = new Audio('/static/lunar-joyride.mp3')
+const bgMusic = new Audio('./static/lunar-joyride.mp3')
 
 bgMusic.addEventListener('ended', function () {
   this.currentTime = 0
@@ -12,14 +12,14 @@ const playBgMusic = () => {
   }
 }
 
-const menuSound = new Audio('/static/Menu_Navigate_00.mp3')
+const menuSound = new Audio('./static/Menu_Navigate_00.mp3')
 const playMenu = () => {
   if (!isMuted) {
     menuSound.play()
   }
 }
 
-const turnSound = new Audio('/static/turn.mp3')
+const turnSound = new Audio('./static/turn.mp3')
 turnSound.volume = 0.3
 const playTurn = () => {
   if (!isMuted) {
@@ -27,21 +27,21 @@ const playTurn = () => {
   }
 }
 
-const hitSound = new Audio('/static/Hit_03.mp3')
+const hitSound = new Audio('./static/Hit_03.mp3')
 const playHit = () => {
   if (!isMuted) {
     hitSound.play()
   }
 }
 
-const specialSound = new Audio('/static/cure.mp3')
+const specialSound = new Audio('./static/cure.mp3')
 const playSpecial = () => {
   if (!isMuted) {
     specialSound.play()
   }
 }
 
-const deathSound = new Audio('/static/Hero_Death_00.mp3')
+const deathSound = new Audio('./static/Hero_Death_00.mp3')
 const playDeath = () => {
   if (!isMuted) {
     deathSound.play()

@@ -137,7 +137,6 @@ table {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 2.5rem 0;
     position: relative;
   }
 
