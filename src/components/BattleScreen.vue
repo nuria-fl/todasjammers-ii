@@ -66,6 +66,7 @@ export default {
 .Battleground {
   height: 100%;
   width: 100%;
+  padding: 1rem;
   display: flex;
   justify-content: space-between;
   &__field {

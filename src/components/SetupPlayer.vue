@@ -1,61 +1,99 @@
 <template>
   <section class="PlayerSetup">
-    <div>
-      <label class="PlayerSetup__label">
-        Nombre del artista:
-      </label>
-      <input
-        type="text"
-        v-model="playerName"
-        :disabled="finished"
-        class="PlayerSetup__input">
+    <div class="PlayerSetup__fields">
+      <div>
+        <label class="PlayerSetup__label">
+          Nombre:
+        </label>
+        <input
+          type="text"
+          v-model="playerName"
+          :disabled="finished"
+          class="PlayerSetup__input">
+      </div>
+      <div>
+        <label class="PlayerSetup__label">
+          País:
+        </label>
+        <select v-model="country" :disabled="finished">
+          <option
+            v-for="country in availableCountries"
+            :value="country.id"
+            :key="country.id">
+            {{ country.name }}
+          </option>
+        </select>
+      </div>
+      <div>
+        <label class="PlayerSetup__label">
+          Estilo musical:
+        </label>
+        <select v-model="musicStyle" :disabled="finished">
+          <option
+            v-for="style in availableStyles"
+            :value="style.id"
+            :key="style.id">
+            {{ style.name }}
+          </option>
+        </select>
+      </div>
+      <div>
+        <label class="PlayerSetup__label">
+          Instrumento:
+        </label>
+        <select v-model="instrument" :disabled="finished">
+          <option
+            v-for="instrument in availableInstruments"
+            :value="instrument.id"
+            :key="instrument.id">
+            {{ instrument.name }}
+          </option>
+        </select>
+      </div>
     </div>
-    <div>
-      <label class="PlayerSetup__label">
-        País:
-      </label>
-      <select v-model="country" :disabled="finished">
-        <option
-          v-for="country in availableCountries"
-          :value="country.id"
-          :key="country.id">
-          {{ country.name }}
-        </option>
-      </select>
+
+    <div :class="`PlayerSetup__result PlayerSetup__result--${playerId}`">
+      <character
+        :playerId="playerId"
+        :characterStyle="musicStyle"
+      />
+      <div class="PlayerSetup__stats">
+        <div>
+          Ataque:
+          <div
+            class="PlayerSetup__bar"
+            :style="`width: ${attackBarWidth}%`">
+          </div>
+        </div>
+        <div>
+          Resistencia:
+          <div
+            class="PlayerSetup__bar"
+            :style="`width: ${defenseBarWidth}%`">
+          </div>
+        </div>
+        <div>
+          {{ specialExplanation }}
+        </div>
+        <div>
+          {{ bonusExplanation }}
+        </div>
+      </div>
     </div>
-    <div>
-      <label class="PlayerSetup__label">
-        Estilo musical:
-      </label>
-      <select v-model="musicStyle" :disabled="finished">
-        <option
-          v-for="style in availableStyles"
-          :value="style.id"
-          :key="style.id">
-          {{ style.name }}
-        </option>
-      </select>
-    </div>
-    <div>
-      <label class="PlayerSetup__label">
-        Instrumento:
-      </label>
-      <select v-model="instrument" :disabled="finished">
-        <option
-          v-for="instrument in availableInstruments"
-          :value="instrument.id"
-          :key="instrument.id">
-          {{ instrument.name }}
-        </option>
-      </select>
-    </div>
-    <button @click="createPlayer" :disabled="finished" class="PlayerSetup__btn">¡Listo!</button>
+
+    <button
+      @click="createPlayer"
+      :disabled="finished"
+      class="Btn PlayerSetup__btn">
+      ¡Listo!
+    </button>
   </section>
 </template>
 
 <script>
 import { mapMutations } from 'vuex'
 import utils from '@/services/utils'
+import Character from '@/components/Character'
 
 export default {
   data () {
@@ -178,6 +216,9 @@ export default {
       default: 'one'
     }
   },
+  components: {
+    Character
+  },
   mounted () {
     const getRandomItemId = (collection) => {
       const max = collection.length - 1
@@ -207,6 +248,38 @@ export default {
     },
     weakness () {
       return this.chosenStyle.weakAgainst
+    },
+    bonusExplanation () {
+      switch (this.bonus) {
+        case 'defense':
+          return 'Plus en resistencia'
+        case 'attack':
+          return 'Plus en ataque'
+        case 'random-recovery':
+          return 'Probabilidad de regeneración espontánea'
+      }
+    },
+    specialExplanation () {
+      switch (this.musicStyle) {
+        case 'reggaeton':
+          return 'Twerking: Absorbe vida del oponente'
+        case 'rock':
+          return 'Air guitar: Confunde al oponente durante 4 turnos'
+        case 'heavy':
+          return 'Headbanging: Hiere al oponente durante 4 turnos'
+        case 'classic':
+          return 'Dirigir orquesta: Obtiene un escudo'
+        case 'country':
+          return 'Lanzar estepicursor: Tu oponente pierde 2 turnos'
+        case 'hiphop':
+          return 'Freestyle: Recupera vida durante 4 turnos'
+      }
+    },
+    attackBarWidth () {
+      return (100 / 10) * this.chosenCountry.stats.attack
+    },
+    defenseBarWidth () {
+      return (100 / 10) * this.chosenCountry.stats.defense
     }
   },
   methods: {
@@ -232,13 +305,65 @@ export default {
 
 <style lang="scss">
 .PlayerSetup {
-  min-width: 14rem;
-  padding: 1em;
+  width: 50%;
+  height: 100%;
+  position: relative;
+  padding: 1rem;
+  &__fields {
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: 1rem;
+    grid-row-gap: 1rem;
+    font-size: 1rem;
+  }
   &__label {
     display: block;
+    margin-bottom: .2em;
+  }
+  select, input {
+    display: block;
+    width: 100%;
+    font-size: 1rem;
   }
   &__btn {
-    width: 100%
+    position: absolute;
+    bottom: 1rem;
+    left: 50%;
+    width: calc(100% - 2rem);
+    transform: translate(-50%, 0);
+    padding: .5em;
+  }
+
+  &__result {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex-direction: row-reverse;
+    &--two {
+      flex-direction: row;
+    }
+  }
+
+  &__stats {
+    width: 43%;
+    padding: .2rem;
+    background: rgba(0,0,0,.7);
+    color: #ddd;
+    font-size: .9rem;
+    line-height: 1.2;
+    > div {
+      margin: .5em;
+    }
+  }
+
+  &__bar {
+    width: 100%;
+    height: 1rem;
+    margin-top: .2em;
+    transition: width .4s;
+    background: #cd5334;
   }
 }
 </style>

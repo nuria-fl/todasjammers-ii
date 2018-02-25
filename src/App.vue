@@ -104,7 +104,11 @@ table {
   }
 
   body {
-    font-family: monospace;
+    font-family: Lato, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .Btn {
@@ -143,7 +147,6 @@ table {
     width: 900px;
     height: 500px;
     margin: 0 auto;
-    padding: 1rem;
   }
 
   .Splash {
@@ -158,7 +161,7 @@ table {
 
     &__title {
       margin: 0;
-      font-family: 'Luckiest Guy', monospace;
+      font-family: 'Luckiest Guy', sans-serif;
       font-size: 5.5rem;
       color: #cd5334;
       text-shadow: 5px 5px 0  #2e282a;

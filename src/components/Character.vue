@@ -1,6 +1,6 @@
 <template>
   <div :class="`Character Character--${playerId}`">
-    <div :class="`Character__bd Character__bd--${player.style}`"></div>
+    <div :class="`Character__bd Character__bd--${style}`"></div>
     <div class="Character__feet"></div>
   </div>
 </template>
@@ -8,7 +8,18 @@
 <script>
 import playerMixin from '@/mixins/playerMixin'
 export default {
-  mixins: [ playerMixin ]
+  mixins: [ playerMixin ],
+  props: {
+    characterStyle: {
+      type: String,
+      default: ''
+    }
+  },
+  computed: {
+    style () {
+      return this.characterStyle || this.player.style
+    }
+  }
 }
 </script>
 
