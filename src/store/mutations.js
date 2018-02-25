@@ -1,3 +1,4 @@
+import sound from '@/services/sound'
 import EventBus from '@/services/EventBus'
 
 export default {
@@ -23,12 +24,15 @@ export default {
 
     EventBus.$emit('showFlash', {
       playerId: player,
-      text: `- ${Math.floor(amount)}`,
+      text: `- ${Math.ceil(amount)}`,
       style: 'danger'
     })
 
     if (state.players[player].life <= 0) {
-      state.currentScreen = 'end'
+      sound.playDeath()
+      setTimeout(() => {
+        state.currentScreen = 'end'
+      }, 500)
     }
   },
   healPlayer (state, {player, amount}) {
@@ -70,7 +74,7 @@ export default {
 
     EventBus.$emit('showFlash', {
       playerId: player,
-      text: `- ${Math.floor(amount)}`,
+      text: `- ${Math.ceil(amount)}`,
       style: 'danger'
     })
   },

@@ -41,6 +41,13 @@ const playSpecial = () => {
   }
 }
 
+const deathSound = new Audio('/static/Hero_Death_00.mp3')
+const playDeath = () => {
+  if (!isMuted) {
+    deathSound.play()
+  }
+}
+
 const toggleSound = () => {
   if (isMuted) {
     isMuted = false
@@ -57,5 +64,6 @@ export default {
   playTurn,
   playHit,
   playSpecial,
+  playDeath,
   toggleSound
 }

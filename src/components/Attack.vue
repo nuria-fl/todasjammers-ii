@@ -105,11 +105,11 @@ export default {
       console.log('resistance ', resistance)
       console.log('damage ', damage)
 
-      const amount = damage - resistance
+      const amount = damage - resistance + 1
 
       this.hurtPlayer({
         player: this.opponentId,
-        amount: amount < 1 ? 1 : amount
+        amount: amount < 2 ? 2 : amount
       })
 
       this.increasePlayerMana()
